@@ -1,0 +1,103 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<project default="all" name="Axis2 Validation">
+
+<property name="build.dir" location="${basedir}/bin"/>
+
+<property name="build.classes.dir" location="${build.dir}/classes"/>
+
+<property name="build.src.dir" location="${basedir}"/>
+
+<property file="${basedir}/antbuild.properties"/>
+
+<path id="axis2.classpath">
+
+<pathelement location="build/classes"/>
+
+<fileset dir="${axis2.home}/lib">
+
+<include name="**/*.jar"/>
+
+</fileset>
+
+<pathelement location="${build.classes.dir}"/>
+
+</path>
+
+ 
+
+<target name="all">
+
+<antcall target="clean"/>
+
+<antcall target="cleanWSDLBindings"/>
+
+<antcall target="axis2WSDLToJava"/>
+
+</target>
+
+ 
+
+<target name="clean">
+
+<delete dir="bin"/>
+
+</target>
+
+ 
+
+<target name="compile">
+
+<mkdir dir="${build.classes.dir}"/>
+
+<javac srcdir="${build.src.dir}" destdir="${build.classes.dir}"/>
+
+</target>
+
+ 
+
+<target name="cleanWSDLBindings">
+
+<delete dir="src/com/rightnow/ws/"/>
+
+</target>
+
+ 
+
+ 
+
+<target name="axis2WSDLToJava">
+
+<java classname="org.apache.axis2.wsdl.WSDL2Java" fork="true">
+
+<classpath refid="axis2.classpath"/>
+
+<arg value="-uri"/>
+
+<arg value="${wsdl.home}"/>
+
+<arg value="-ns2p"/>
+
+<arg value="urn:wsdl.ws.rightnow.com/v1_2=com.rightnow.ws.wsdl,urn:objects.ws.rightnow.com/v1_2=com.rightnow.ws.objects,urn:messages.ws.rightnow.com/v1_2=com.rightnow.ws.messages,urn:common.ws.rightnow.com/v1_2=com.rightnow.ws.common"/>
+
+<arg value="-o"/>
+
+<arg file="${build.src.dir}"/>
+
+<arg value="--noBuildXML"/>
+
+<arg value="-Ejavaversion"/>
+
+<arg value="1.6"/>
+
+<arg value="-u"/>
+
+<arg value="-uw"/>
+
+<arg value="-or"/>
+
+</java>
+
+</target>
+
+</project>
